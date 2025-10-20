@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="TaskPaneApp">
+  <Id>12e2db3a-41a4-4c3b-8562-57f79c8a5e33</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>Test</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+  <DisplayName DefaultValue="Test"/>
+  <Description DefaultValue="Test"/>
+  <Hosts>
+    <Host Name="Mailbox"/>
+  </Hosts>
+  <DefaultSettings>
+    <SourceLocation DefaultValue="https://aliciari.github.io/outlook-followup-addon/taskpane.html"/>
+  </DefaultSettings>
+  <Permissions>ReadMailbox</Permissions>
+</OfficeApp>
