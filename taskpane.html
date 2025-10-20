@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Email Follow-up Assistant</title>
+    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            padding: 16px;
+            line-height: 1.5;
+        }
+        .container {
+            max-width: 100%;
+        }
+        header {
+            margin-bottom: 20px;
+            border-bottom: 2px solid #0078d4;
+            padding-bottom: 12px;
+        }
+        h1 {
+            font-size: 18px;
+            color: #0078d4;
+            margin-bottom: 8px;
+        }
+        .stats {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            color: #666;
+        }
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        .btn-primary {
+            background-color: #0078d4;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #005a9e;
+        }
+        .btn-secondary {
+            background-color: #e7e7e7;
+            color: #333;
+        }
+        .btn-secondary:hover {
+            background-color: #d0d0d0;
+        }
+        .email-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .email-item {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 4px solid #999;
+        }
+        .email-item:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left-color: #0078d4;
+        }
+        .email-item.high-priority {
+            border-left-color: #d13438;
+            background-color: #fef5f5;
+        }
+        .email-item.medium-priority {
+            border-left-color: #f7630c;
+            background-color: #fffbf5;
+        }
+        .email-item.low-priority {
+            border-left-color: #107c10;
+            background-color: #f5fff5;
+        }
+        .email-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 6px;
+        }
+        .email-from {
+            font-weight: 600;
+            font-size: 13px;
+            color: #333;
+        }
+        .priority-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .priority-high {
+            background-color: #d13438;
+            color: white;
+        }
+        .priority-medium {
+            background-color: #f7630c;
+            color: white;
+        }
+        .priority-low {
+            background-color: #107c10;
+            color: white;
+        }
+        .email-subject {
+            font-size: 12px;
+            color: #0078d4;
+            margin-bottom: 4px;
+            text-decoration: none;
+        }
+        .email-meta {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .email-days {
+            font-weight: 500;
+            color: #d13438;
+        }
+        .recommendation {
+            background-color: #f0f4ff;
+            border-left: 2px solid #0078d4;
+            padding: 8px;
+            margin-top: 8px;
+            font-size: 11px;
+            border-radius: 2px;
+        }
+        .actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .action-btn {
+            padding: 4px 8px;
+            font-size: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #d0d0d0;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .action-btn:hover {
+            background-color: #e0e0e0;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 32px 16px;
+            color: #666;
+        }
+        .empty-state-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+        .filter-group {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 4px 10px;
+            font-size: 11px;
+            background-color: white;
+            border: 1px solid #d0d0d0;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-btn.active {
+            background-color: #0078d4;
+            color: white;
+            border-color: #0078d4;
+        }
+        .loading {
+            text-align: center;
+            padding: 16px;
+            color: #666;
+        }
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #0078d4;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📧 Email Follow-up Assistant</h1>
+            <div class="stats">
+                <span class="stat-item">Total Tracked: <strong id="totalCount">0</strong></span>
+                <span class="stat-item">High Priority: <strong id="highPriorityCount">0</strong></span>
+                <span class="stat-item">Pending: <strong id="pendingCount">0</strong></span>
+            </div>
+        </header>
+
+        <div class="controls">
+            <button class="btn-primary" id="refreshBtn">🔄 Refresh from Inbox</button>
+            <button class="btn-secondary" id="clearBtn">Clear All Data</button>
+        </div>
+
+        <div class="filter-group">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="high">High Priority</button>
+            <button class="filter-btn" data-filter="medium">Medium</button>
+            <button class="filter-btn" data-filter="low">Low</button>
+            <button class="filter-btn" data-filter="pending">Pending Action</button>
+        </div>
+
+        <div id="content">
+            <div class="loading">
+                <span class="spinner"></span>Loading emails...
+            </div>
+        </div>
+    </div>
+
+    <script src="taskpane.js"></script>
+</body>
+</html>
