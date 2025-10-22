@@ -5,7 +5,7 @@
            xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides"
            xsi:type="MailApp">
   <Id>1c82d27f-f6d4-4007-a08d-bad1de404825</Id>
-  <Version>1.0.0.0</Version>
+  <Version>1.0.1.1</Version>
   <ProviderName>Contoso</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Email Follow-up Assistant"/>
